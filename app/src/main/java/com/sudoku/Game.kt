@@ -19,6 +19,8 @@ class Game {
     private var sum: Int = 0
 
     var victory = false
+
+    val isVictoryLiveData = MutableLiveData<Boolean>()
     var sudokus = arrayListOf<List<Cell>>()
 
     init {
@@ -30,12 +32,19 @@ class Game {
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
         cellsLiveData.postValue(board.cells)
         isTakingNotesLiveData.postValue(isTakingNotes)
-        for (j in 0..9){
+        isVictoryLiveData.postValue(victory)
+
+    }
+
+    fun checkVictory(cells: List<Cell>){
+        for (j in 0..8){
             sum += cells[j].value
-            if (sum == 45){
-                victory = true
-            }
+
         }
+        isVictoryLiveData.postValue(sum == 45)
+        Log.d("sumatory", sum.toString())
+        Log.d("isFinished", isVictoryLiveData.value.toString())
+        sum=0
     }
 
     fun handleInput(number: Int) {

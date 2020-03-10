@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), com.sudoku.BoardView.OnTouchListener {
         viewModel.sudokuGame.cellsLiveData.observe(this, Observer { updateCells(it) })
         viewModel.sudokuGame.isTakingNotesLiveData.observe(this, Observer { updateNoteTakingUI(it) })
         viewModel.sudokuGame.highlightedKeysLiveData.observe(this, Observer { updateHighlightedKeys(it) })
+        viewModel.sudokuGame.isVictoryLiveData.observe(this, Observer { checkVictory(it) })
 
 
         numberButtons = listOf(oneButton, twoButton, threeButton, fourButton, fiveButton, sixButton,
@@ -50,8 +51,11 @@ class MainActivity : AppCompatActivity(), com.sudoku.BoardView.OnTouchListener {
 
     private fun updateCells(cells: List<Cell>?) = cells?.let {
         sudokuView.updateCells(cells)
-        if (viewModel.sudokuGame.victory) Toast.makeText(this, "victory!", Toast.LENGTH_LONG).show()
+        viewModel.sudokuGame.checkVictory(cells)
+    }
 
+    private fun checkVictory(isvivtory: Boolean){
+        if (isvivtory) Toast.makeText(this, "victory", Toast.LENGTH_LONG).show()
     }
 
     private fun updateSelectedCellUI(cell: Pair<Int, Int>?) = cell?.let {
