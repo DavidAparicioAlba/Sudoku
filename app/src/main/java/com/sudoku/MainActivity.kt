@@ -3,6 +3,7 @@ package com.sudoku
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity(), com.sudoku.BoardView.OnTouchListener {
     private lateinit var numberButtons: List<Button>
 
     override fun onCellTouched(row: Int, col: Int) {
-        viewModel.sudokuGame.updateSelectedCell(row, col)
+            viewModel.sudokuGame.updateSelectedCell(row, col)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +56,9 @@ class MainActivity : AppCompatActivity(), com.sudoku.BoardView.OnTouchListener {
     }
 
     private fun checkVictory(isvivtory: Boolean){
-        if (isvivtory) Toast.makeText(this, "victory", Toast.LENGTH_LONG).show()
+        val toast = Toast.makeText(this, "victory", Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        if (isvivtory) toast.show()
     }
 
     private fun updateSelectedCellUI(cell: Pair<Int, Int>?) = cell?.let {
@@ -63,8 +66,8 @@ class MainActivity : AppCompatActivity(), com.sudoku.BoardView.OnTouchListener {
     }
 
     private fun updateNoteTakingUI(isNoteTaking: Boolean?) = isNoteTaking?.let {
-        //val color = if (it) ContextCompat.getColor(this, R.color.colorPrimary) else Color.LTGRAY
-      //  notesButton.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
+        val color = if (it) ContextCompat.getColor(this, R.color.colorPrimary) else Color.LTGRAY
+        notesButton.background.setColorFilter(color, PorterDuff.Mode.MULTIPLY)
     }
 
     private fun updateHighlightedKeys(set: Set<Int>?) = set?.let {

@@ -2,6 +2,8 @@ package com.sudoku
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import java.lang.Math.random
+import kotlin.random.Random
 
 class Game {
 
@@ -14,19 +16,27 @@ class Game {
     private var selectedCol = -1
     private var isTakingNotes = false
 
-    private val board: Board
+    val board: Board
 
-    private var sum: Int = 0
+    private var sumRow: Int = 0
+    private var sumCol: Int = 0
+    private var sumSquare: Int = 0
 
     var victory = false
 
     val isVictoryLiveData = MutableLiveData<Boolean>()
-    var sudokus = arrayListOf<List<Cell>>()
+    var sudokus = Sudoku.sudokus
+
+    var sudokunumberlist = Random.nextInt(0,4)
 
     init {
         Log.d("initGame", "init")
-        val cells = List(9 * 9) {i -> Cell(i / 9, i % 9, i % 9)}
-        cells[0].notes = mutableSetOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        val cells = sudokus[0]
+        for (i in 0 until sudokus[0].size){
+            if (sudokus[0][i].value != 0){
+                sudokus[0][i].isStartingCell = true
+            }
+        }
         board = Board(9, cells)
 
         selectedCellLiveData.postValue(Pair(selectedRow, selectedCol))
@@ -37,14 +47,58 @@ class Game {
     }
 
     fun checkVictory(cells: List<Cell>){
-        for (j in 0..8){
-            sum += cells[j].value
+        for (i in 0..8){
+            for (j in 0..8){
+                sumRow += cells[(i*9)+j].value
+                sumCol += cells[(j*9)+i].value
+
+            }
+            sumSquare = cells[0 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[1 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[2 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[9 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[10 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[11 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[18 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[19 + ((i/3)*27) + ((i%3)*3)].value+
+                    cells[20 + ((i/3)*27) + ((i%3)*3)].value
+
+            if (sumRow != 45) {
+                Log.d("sumatoryrow", sumRow.toString())
+                sumRow = 0
+                sumCol = 0
+                sumSquare = 0
+                break
+            }
+            if (sumCol != 45) {
+                Log.d("sumatoryCol", sumCol.toString())
+                sumRow = 0
+                sumCol = 0
+                sumSquare = 0
+                break
+            }
+            if (sumSquare != 45){
+                Log.d("sumatorysquare", sumSquare.toString())
+                sumSquare = 0
+                sumRow = 0
+                sumCol = 0
+                break
+            }
+            if (i == 8){
+                isVictoryLiveData.postValue(sumRow == 45 && sumCol == 45 && sumSquare == 45)
+            }
+            sumCol=0
+            sumRow=0
+            sumSquare=0
 
         }
-        isVictoryLiveData.postValue(sum == 45)
-        Log.d("sumatory", sum.toString())
+
+
+
+
+
         Log.d("isFinished", isVictoryLiveData.value.toString())
-        sum=0
+
     }
 
     fun handleInput(number: Int) {

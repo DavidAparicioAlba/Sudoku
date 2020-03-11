@@ -191,6 +191,7 @@ class BoardView(context: Context, attributeSet: AttributeSet): View(context, att
     }
 
     fun updateSelectedCellUI(row: Int, col: Int) {
+
         selectedRow = row
         selectedCol = col
         invalidate()
