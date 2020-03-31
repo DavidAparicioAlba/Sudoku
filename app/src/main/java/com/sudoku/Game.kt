@@ -27,14 +27,14 @@ class Game {
     val isVictoryLiveData = MutableLiveData<Boolean>()
     var sudokus = Sudoku.sudokus
 
-    var sudokunumberlist = Random.nextInt(0,4)
+    var sudokunumberlist = Random.nextInt(0,2)
 
     init {
         Log.d("initGame", "init")
-        val cells = sudokus[0]
-        for (i in 0 until sudokus[0].size){
-            if (sudokus[0][i].value != 0){
-                sudokus[0][i].isStartingCell = true
+        val cells = sudokus[sudokunumberlist]
+        for (i in 0 until sudokus[sudokunumberlist].size){
+            if (sudokus[sudokunumberlist][i].value != 0){
+                sudokus[sudokunumberlist][i].isStartingCell = true
             }
         }
         board = Board(9, cells)
